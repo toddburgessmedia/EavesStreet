@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">EavesStreet</string>
+
+    <string name="mainfragment_ticker_title">Ticker</string>
+    <string name="mainfragment_ticker_close">Close Price</string>
+    <string name="mainfragment_ticker_fullname">Full Name</string>
+    <string name="mainfragment_ticker_yesterday_change">Yesterday\'s Change</string>
+    <string name="mainfragment_ticker_location">Location</string>
+    <string name="mainfragment_ticker_country">Country</string>
+    <string name="mainfragment_ticker_joined">Joined</string>
+    <string name="mainfragment_ticker_volume">Volume Traded</string>
+    <string name="mainfragment_ticker_dividend">Average Dividend</string>
+    <string name="mainfragment_ticker_balance">Eaves Balance</string>
+    <string name="mainfragment_ticker_investments">Investments</string>
+    <string name="mainfragment_ticker_shareholders">Shareholders</string>
+
+    <string name="refresh">Refresh</string>
+
+
+
+</resources>
