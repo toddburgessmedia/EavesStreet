@@ -76,10 +76,6 @@ public class EmpireAvenueAuthActivity extends AppCompatActivity {
 
     }
 
-    public String getClientID() {
-        return CLIENT_ID;
-    }
-
     private class EAWebViewClient extends WebViewClient {
 
         @Override

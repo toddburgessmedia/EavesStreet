@@ -106,7 +106,7 @@ public class EavesStreetMainFragment extends Fragment implements EavesStreetPres
 
 
         fullName.setText(profile.getFullName());
-        ticker.setText(profile.getTicker());
+        ticker.setText("(e)" + profile.getTicker());
         location.setText(profile.getLocation());
         country.setText(profile.getCountry());
         joined.setText(profile.getJoined());

@@ -14,8 +14,13 @@
     <string name="mainfragment_ticker_investments">Investments</string>
     <string name="mainfragment_ticker_shareholders">Shareholders</string>
 
-    <string name="refresh">Refresh</string>
+    <string name="widget_close">Close</string>
+    <string name="widget_change">Change</string>
+    <string name="widget_default_text">Updating....</string>
 
+    <string name="refresh">Refresh</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
 
 
 </resources>

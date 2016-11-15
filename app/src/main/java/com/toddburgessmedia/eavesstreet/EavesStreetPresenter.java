@@ -28,12 +28,23 @@ public class EavesStreetPresenter {
     private EAProfile profile;
 
     EavesStreetView view;
+    EavesStreetIntentService service;
+    int[] appIds;
 
     public EavesStreetPresenter(String client, String access_token, EavesStreetView view) {
 
         this.client = client;
         this.access_token = access_token;
         this.view = view;
+    }
+
+    public EavesStreetPresenter(String client, String access_token, EavesStreetIntentService service,
+                                int[] appIds) {
+
+        this.client = client;
+        this.access_token = access_token;
+        this.service = service;
+        this.appIds = appIds;
     }
 
 
@@ -58,7 +69,12 @@ public class EavesStreetPresenter {
             .subscribe(new Subscriber<Response<EAProfileData>>() {
             @Override
             public void onCompleted() {
-                view.updateView();
+
+                if (view != null) {
+                    view.updateView();
+                } else {
+                    service.updateService(profile,appIds);
+                }
             }
 
             @Override
