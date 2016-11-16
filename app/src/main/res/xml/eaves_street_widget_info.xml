@@ -4,7 +4,7 @@
     android:initialLayout="@layout/eaves_street_widget"
     android:minHeight="80dp"
     android:minWidth="180dp"
-    android:previewImage="@drawable/example_appwidget_preview"
+    android:previewImage="@drawable/eavesstreetpreview"
     android:resizeMode="horizontal|vertical"
     android:updatePeriodMillis="21600000"
     android:widgetCategory="home_screen|keyguard"
