@@ -2,7 +2,6 @@ package com.toddburgessmedia.eavesstreet;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.content.Context;
 import android.util.Log;
 
 import com.toddburgessmedia.eavesstreet.retrofit.EAProfile;
@@ -13,15 +12,7 @@ import com.toddburgessmedia.eavesstreet.retrofit.EAProfile;
  * <p>
  * helper methods.
  */
-public class EavesStreetIntentService extends IntentService {
-    // TODO: Rename actions, choose action names that describe tasks that this
-    // IntentService can perform, e.g. ACTION_FETCH_NEW_ITEMS
-    private static final String ACTION_FOO = "com.toddburgessmedia.eavesstreet.action.FOO";
-    private static final String ACTION_BAZ = "com.toddburgessmedia.eavesstreet.action.BAZ";
-
-    // TODO: Rename parameters
-    private static final String EXTRA_PARAM1 = "com.toddburgessmedia.eavesstreet.extra.PARAM1";
-    private static final String EXTRA_PARAM2 = "com.toddburgessmedia.eavesstreet.extra.PARAM2";
+public class EavesStreetIntentService extends IntentService  {
 
     public EavesStreetIntentService() {
         super("EavesStreetIntentService");
@@ -33,14 +24,6 @@ public class EavesStreetIntentService extends IntentService {
      *
      * @see IntentService
      */
-    // TODO: Customize helper method
-    public static void startActionFoo(Context context, String param1, String param2) {
-        Intent intent = new Intent(context, EavesStreetIntentService.class);
-        intent.setAction(ACTION_FOO);
-        intent.putExtra(EXTRA_PARAM1, param1);
-        intent.putExtra(EXTRA_PARAM2, param2);
-        context.startService(intent);
-    }
 
     @Override
     protected void onHandleIntent(Intent intent) {
@@ -52,22 +35,32 @@ public class EavesStreetIntentService extends IntentService {
 
         String accessToken = intent.getStringExtra("access_token");
         String clientID = intent.getStringExtra("client_id");
-        int[] appIds = intent.getIntArrayExtra("appIds");
-        Log.d(EavesSteetMain.TAG, "onHandleIntent: " + appIds.toString());
 
-        EavesStreetPresenter presenter = new EavesStreetPresenter(clientID, accessToken, this,appIds);
+        EavesStreetPresenter presenter = new EavesStreetPresenter(clientID, accessToken, this);
         presenter.fetchEAProfile();
     }
 
-    public void updateService(EAProfile profile, int[] appIds) {
-
-        Log.d(EavesSteetMain.TAG, "updateService: " + appIds.toString());
+    public void update(EAProfile profile) {
 
         Intent intent = new Intent("com.toddburgessmedia.eavesstreet.UPDATE");
         intent.putExtra("ticker", profile.getTicker());
         intent.putExtra("close", profile.getClose());
         intent.putExtra("change", profile.getChange());
-        intent.putExtra("appIds", appIds);
+        sendBroadcast(intent);
+
+    }
+
+    public void onError(String errorMsg) {
+
+        String action;
+        if (errorMsg.equals("network")) {
+            action = "com.toddburgessmedia.eavesstreet.NETWORKERROR";
+        } else {
+            action = "com.toddburgessmedia.eavesstreet.ERROR";
+        }
+
+        Intent intent = new Intent(action);
+        intent.putExtra("errormsg", errorMsg);
         sendBroadcast(intent);
 
     }

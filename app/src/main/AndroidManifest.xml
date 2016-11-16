@@ -26,6 +26,12 @@
             <intent-filter>
                 <action android:name="com.toddburgessmedia.eavesstreet.UPDATE" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="com.toddburgessmedia.eavesstreet.ERROR" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.toddburgessmedia.eavesstreet.NETWORKERROR" />
+            </intent-filter>
 
             <meta-data
                 android:name="android.appwidget.provider"

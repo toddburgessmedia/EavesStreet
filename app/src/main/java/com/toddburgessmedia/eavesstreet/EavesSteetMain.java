@@ -3,9 +3,13 @@ package com.toddburgessmedia.eavesstreet;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 public class EavesSteetMain extends AppCompatActivity {
 
@@ -22,18 +26,43 @@ public class EavesSteetMain extends AppCompatActivity {
 
 
     @Override
+    public void onStart() {
+        super.onStart();
+
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        EventBus.getDefault().unregister(this);
+    }
+
+
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_eaves_steet_main);
 
+        Log.d(TAG, "onCreate: Hello World");
+        
         prefs = getSharedPreferences("eavesstreet", MODE_PRIVATE);
         editor = prefs.edit();
 
         if (!accessTokenValid()) {
-            Intent i = new Intent(this, EmpireAvenueAuthActivity.class);
-            startActivityForResult(i, GET_AUTH_CODE);
+            authenticateUser();
+            return;
         }
 
+        createFragment();
+
+    }
+
+    private void createFragment() {
         fragment = new EavesStreetMainFragment();
         Bundle bundle = new Bundle();
         bundle.putString("access_token",accessToken);
@@ -41,11 +70,28 @@ public class EavesSteetMain extends AppCompatActivity {
         bundle.putString("clientID",getString(R.string.clientid));
         fragment.setArguments(bundle);
 
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.main_framelayout, fragment, "fragment");
-        transaction.commit();
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.main_framelayout, fragment, "fragment");
+                transaction.commit();
+            }
+        });
 
     }
+
+    public void authenticateUser() {
+        Intent i = new Intent(this, EmpireAvenueAuthActivity.class);
+        startActivityForResult(i, GET_AUTH_CODE);
+    }
+
+    @Subscribe
+    public void authenticateUser(EavesStreetMainFragment.UnAuthorizedMessage message) {
+        Intent i = new Intent(this, EmpireAvenueAuthActivity.class);
+        startActivityForResult(i, GET_AUTH_CODE);
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -56,14 +102,24 @@ public class EavesSteetMain extends AppCompatActivity {
                 editor.putString("access_token", data.getStringExtra("access_token"));
                 editor.putLong("time", (System.currentTimeMillis() / 1000) + 5184000);
                 editor.apply();
+                getPrefValues();
+                createFragment();
+                updateWidget();
             }
         }
     }
 
+    private void updateWidget() {
+        Intent intent = new Intent(this, EavesStreetIntentService.class);
+        intent.putExtra("access_token", accessToken);
+        intent.putExtra("client_id", getString(R.string.clientid));
+        startService(intent);
+    }
+
+
     private boolean accessTokenValid() {
 
-        accessToken = prefs.getString("access_token", "invalid");
-        time = prefs.getLong("time",-1);
+        getPrefValues();
 
         if (accessToken.equals("invalid")) {
             return false;
@@ -72,5 +128,10 @@ public class EavesSteetMain extends AppCompatActivity {
         }
 
         return true;
+    }
+
+    private void getPrefValues() {
+        accessToken = prefs.getString("access_token", "invalid");
+        time = prefs.getLong("time",-1);
     }
 }

@@ -1,8 +1,12 @@
 package com.toddburgessmedia.eavesstreet;
 
+import android.util.Log;
+
 import com.toddburgessmedia.eavesstreet.retrofit.EAProfile;
 import com.toddburgessmedia.eavesstreet.retrofit.EAProfileAPI;
 import com.toddburgessmedia.eavesstreet.retrofit.EAProfileData;
+
+import java.util.StringTokenizer;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -29,7 +33,8 @@ public class EavesStreetPresenter {
 
     EavesStreetView view;
     EavesStreetIntentService service;
-    int[] appIds;
+
+    String errorMsg = "";
 
     public EavesStreetPresenter(String client, String access_token, EavesStreetView view) {
 
@@ -38,13 +43,12 @@ public class EavesStreetPresenter {
         this.view = view;
     }
 
-    public EavesStreetPresenter(String client, String access_token, EavesStreetIntentService service,
-                                int[] appIds) {
+    public EavesStreetPresenter(String client, String access_token, EavesStreetIntentService service
+                                ) {
 
         this.client = client;
         this.access_token = access_token;
         this.service = service;
-        this.appIds = appIds;
     }
 
 
@@ -70,25 +74,47 @@ public class EavesStreetPresenter {
             @Override
             public void onCompleted() {
 
+                if (!errorMsg.equals("")) {
+                    if (view != null) {
+                        view.onError(errorMsg);
+                    } else {
+                        service.onError(errorMsg);
+                    }
+                    return;
+                }
+
                 if (view != null) {
-                    view.updateView();
+                    view.update();
                 } else {
-                    service.updateService(profile,appIds);
+                    service.update(profile);
                 }
             }
 
             @Override
             public void onError(Throwable e) {
+                Log.d(EavesSteetMain.TAG, "onError: something horrible happened " + e.getMessage());
+                if (view != null) {
+                    view.onError("Network Connection Error!");
+                } else {
+                    service.onError("network");
+                }
 
             }
 
             @Override
             public void onNext(Response<EAProfileData> eaProfileDataResponse) {
-                EAProfileData data;
-                data = eaProfileDataResponse.body();
-                profile = data.getProfile();
 
+                if (eaProfileDataResponse.code() == 200) {
+                    EAProfileData data;
+                    data = eaProfileDataResponse.body();
+                    profile = data.getProfile();
 
+                } else {
+                    Log.d(EavesSteetMain.TAG, "onNext: " + eaProfileDataResponse.raw().toString());
+                    errorMsg = getErrorMessage(eaProfileDataResponse.raw().toString());
+                    Log.d(EavesSteetMain.TAG, "onNext: " + errorMsg);
+                    onError(new Throwable(errorMsg));
+                }
             }
         });
     }
@@ -107,10 +133,29 @@ public class EavesStreetPresenter {
                 .build();
     }
 
+    private String getErrorMessage (String body)  {
+
+        StringTokenizer st = new StringTokenizer(body, ",");
+        String token;
+        String error = "";
+
+        while (st.hasMoreElements()) {
+            token = st.nextToken();
+            Log.d(EavesSteetMain.TAG, "getErrorCode: " + token);
+            if (token.startsWith(" message=")) {
+                error = token.substring(token.indexOf('=')+1);
+                break;
+            }
+        }
+
+        return error;
+    }
 
 
     public interface EavesStreetView {
 
-        public void updateView();
+        public void update();
+
+        public void onError(String message);
     }
 }

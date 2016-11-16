@@ -11,9 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.toddburgessmedia.eavesstreet.retrofit.EAProfile;
+
+import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -70,6 +73,22 @@ public class EavesStreetMainFragment extends Fragment implements EavesStreetPres
     EavesStreetPresenter presenter;
     EAProfile profile;
 
+//    @Override
+//    public void onStart() {
+//        super.onStart();
+//
+//        if (!EventBus.getDefault().isRegistered(this)) {
+//            EventBus.getDefault().register(this);
+//        }
+//    }
+//
+//    @Override
+//    public void onDestroy() {
+//        super.onDestroy();
+//
+//        EventBus.getDefault().unregister(this);
+//    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,7 +116,7 @@ public class EavesStreetMainFragment extends Fragment implements EavesStreetPres
 
     }
 
-    public void updateView() {
+    public void update() {
 
         EAProfile profile = presenter.getProfile();
         double closePrice = profile.getClose();
@@ -138,5 +157,18 @@ public class EavesStreetMainFragment extends Fragment implements EavesStreetPres
         }
 
         return true;
+    }
+
+    public void onError (String errorMsg) {
+
+        if (errorMsg.equals("Unauthorized")) {
+            EventBus.getDefault().post(new UnAuthorizedMessage());
+        } else {
+            Toast.makeText(getActivity(), errorMsg, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public class UnAuthorizedMessage {
+
     }
 }
