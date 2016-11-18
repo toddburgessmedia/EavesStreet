@@ -1,11 +1,14 @@
 package com.toddburgessmedia.eavesstreet;
 
+import android.app.NotificationManager;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -74,6 +77,11 @@ public class EavesSteetMain extends AppCompatActivity {
         new Handler().post(new Runnable() {
             @Override
             public void run() {
+                Fragment oldfragment = getSupportFragmentManager().findFragmentByTag("fragment");
+                if(oldfragment != null) {
+                    getSupportFragmentManager().beginTransaction().remove(oldfragment).commit();
+                }
+
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.main_framelayout, fragment, "fragment");
                 transaction.commit();
@@ -117,6 +125,9 @@ public class EavesSteetMain extends AppCompatActivity {
         if (ids.length == 0) {
             return;
         }
+
+        NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancel(1);
 
         Toast.makeText(this, R.string.eavesmain_toast_update, Toast.LENGTH_SHORT).show();
 

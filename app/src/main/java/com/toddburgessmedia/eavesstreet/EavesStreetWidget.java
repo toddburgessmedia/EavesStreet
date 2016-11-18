@@ -125,7 +125,7 @@ public class EavesStreetWidget extends AppWidgetProvider {
         PendingIntent pi = PendingIntent.getActivity(context,0,resultIntent,PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.drawable.ic_notify)
                 .setContentTitle(context.getString(R.string.app_name))
                 .setContentText(context.getString(R.string.widget_notification_text))
                 .setAutoCancel(true)

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">EavesStreet</string>
+    <string name="app_name">Eaves Street</string>
 
     <string name="mainfragment_ticker_title">Ticker</string>
     <string name="mainfragment_ticker_close">Close Price</string>
@@ -21,7 +21,7 @@
     <string name="refresh">Refresh</string>
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
-    <string name="widget_notification_text">You must re-authenticate with Empire Avenue</string>
+    <string name="widget_notification_text">You need to re-authenticate</string>
     <string name="widget_error_auth">Authentication Error</string>
     <string name="widget_error_network">Network Error</string>
     <string name="eavesmain_toast_update">Widget Updated</string>
