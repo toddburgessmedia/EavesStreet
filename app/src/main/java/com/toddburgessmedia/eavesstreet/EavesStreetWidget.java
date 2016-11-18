@@ -21,7 +21,7 @@ public class EavesStreetWidget extends AppWidgetProvider {
 
     public final String ACTION = "com.toddburgessmedia.eavesstreet.UPDATE";
     public final String ERROR = "com.toddburgessmedia.eavesstreet.ERROR";
-    public final String NETWORKERROR = "com.toddburgessmedia.eavesstreet.ERROR";
+    public final String NETWORKERROR = "com.toddburgessmedia.eavesstreet.NETWORKERROR";
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId, Intent intent) {
@@ -47,9 +47,6 @@ public class EavesStreetWidget extends AppWidgetProvider {
             views.setViewVisibility(R.id.widget_change_down, View.VISIBLE);
         }
 
-
-
-
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
@@ -65,7 +62,7 @@ public class EavesStreetWidget extends AppWidgetProvider {
     }
 
 
-        @Override
+    @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
 
         SharedPreferences prefs = context.getSharedPreferences("eavesstreet", Context.MODE_PRIVATE);
@@ -77,13 +74,15 @@ public class EavesStreetWidget extends AppWidgetProvider {
         intent.putExtra("client_id", clientID);
         context.startService(intent);
 
-        // There may be multiple widgets active, so update all of them
-
     }
 
     @Override
     public void onEnabled(Context context) {
-        // Enter relevant functionality for when the first widget is created
+        AppWidgetManager manager = AppWidgetManager.getInstance(context);
+        ComponentName name = new ComponentName(context, EavesStreetWidget.class);
+        int[] appIds = manager.getAppWidgetIds(name);
+
+        onUpdate(context, manager, appIds);
     }
 
     @Override
@@ -108,11 +107,13 @@ public class EavesStreetWidget extends AppWidgetProvider {
         } else if (intent.getAction().equals(ERROR)) {
             createErrorNotification(context);
             for (int appWidgetId : appIds) {
-                updateAppWidgetError(context, manager, appWidgetId, "Authentication Error");
+                updateAppWidgetError(context, manager, appWidgetId,
+                        context.getString(R.string.widget_error_auth));
             }
         } else if (intent.getAction().equals(NETWORKERROR)) {
             for (int appWidgetId : appIds) {
-                updateAppWidgetError(context, manager, appWidgetId, "Network Error");
+                updateAppWidgetError(context, manager, appWidgetId,
+                        context.getString(R.string.widget_error_network));
             }
         }
 
@@ -125,8 +126,8 @@ public class EavesStreetWidget extends AppWidgetProvider {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle(context.getString(R.string.app_name) + " Error")
-                .setContentText("You must re-authenticate with Empire Avenue")
+                .setContentTitle(context.getString(R.string.app_name))
+                .setContentText(context.getString(R.string.widget_notification_text))
                 .setAutoCancel(true)
                 .setContentIntent(pi);
 

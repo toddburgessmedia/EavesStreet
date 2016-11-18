@@ -1,5 +1,7 @@
 package com.toddburgessmedia.eavesstreet;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -7,6 +9,7 @@ import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -48,8 +51,6 @@ public class EavesSteetMain extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_eaves_steet_main);
 
-        Log.d(TAG, "onCreate: Hello World");
-        
         prefs = getSharedPreferences("eavesstreet", MODE_PRIVATE);
         editor = prefs.edit();
 
@@ -110,6 +111,15 @@ public class EavesSteetMain extends AppCompatActivity {
     }
 
     private void updateWidget() {
+
+        int ids[] = AppWidgetManager.getInstance(this).getAppWidgetIds(new ComponentName(this,EavesStreetWidget.class));
+
+        if (ids.length == 0) {
+            return;
+        }
+
+        Toast.makeText(this, R.string.eavesmain_toast_update, Toast.LENGTH_SHORT).show();
+
         Intent intent = new Intent(this, EavesStreetIntentService.class);
         intent.putExtra("access_token", accessToken);
         intent.putExtra("client_id", getString(R.string.clientid));
