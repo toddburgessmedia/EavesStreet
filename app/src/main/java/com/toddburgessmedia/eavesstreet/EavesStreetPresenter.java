@@ -89,7 +89,7 @@ public class EavesStreetPresenter {
             @Override
             public void onError(Throwable e) {
                 if (view != null) {
-                    view.onError(service.getString(R.string.eavesstreet_error_view));
+                    view.onError("Authentication Error");
                 } else {
                     service.onError("network");
                 }

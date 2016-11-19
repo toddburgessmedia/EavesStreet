@@ -1,0 +1,7 @@
+<resources>
+
+    <dimen name="app_textSize">18sp</dimen>
+    <dimen name="imageview_width">400dp</dimen>
+    <dimen name="imageview_height">400dp</dimen>
+
+</resources>
