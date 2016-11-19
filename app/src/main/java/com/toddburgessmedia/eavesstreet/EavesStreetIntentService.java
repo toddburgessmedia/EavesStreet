@@ -2,7 +2,6 @@ package com.toddburgessmedia.eavesstreet;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.util.Log;
 
 import com.toddburgessmedia.eavesstreet.retrofit.EAProfile;
 
@@ -30,8 +29,6 @@ public class EavesStreetIntentService extends IntentService  {
         if (intent == null) {
             return;
         }
-
-        Log.d(EavesSteetMain.TAG, "onHandleIntent: intent fired up");
 
         String accessToken = intent.getStringExtra("access_token");
         String clientID = intent.getStringExtra("client_id");

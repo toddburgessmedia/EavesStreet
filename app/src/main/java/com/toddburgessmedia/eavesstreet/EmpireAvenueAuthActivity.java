@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Window;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -70,7 +69,6 @@ public class EmpireAvenueAuthActivity extends AppCompatActivity {
                 .appendQueryParameter("state","request_auth_code");
 
         String url = builder.build().toString();
-        Log.d(TAG, "onCreate: URI " + url);
 
         webView.loadUrl(url);
 
@@ -82,14 +80,11 @@ public class EmpireAvenueAuthActivity extends AppCompatActivity {
         @SuppressWarnings("deprecation")
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
 
-            Log.d(TAG, "shouldOverrideUrlLoading: " + url);
-
             final Intent i = new Intent();
 
             Uri uri = Uri.parse(url);
             String code = uri.getQueryParameter("code");
 
-            Log.d(TAG, "shouldOverrideUrlLoading: " + code);
             if (code != null) {
                 if (!url.startsWith(REDIRECT_URI)) {
                     return false;
@@ -110,7 +105,6 @@ public class EmpireAvenueAuthActivity extends AppCompatActivity {
 
                             @Override
                             public void onNext(String s) {
-                                Log.d(TAG, "onNext: " + s);
                                 i.putExtra("access_token", s);
                             }
                         });

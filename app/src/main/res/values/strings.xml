@@ -25,6 +25,7 @@
     <string name="widget_error_auth">Authentication Error</string>
     <string name="widget_error_network">Network Error</string>
     <string name="eavesmain_toast_update">Widget Updated</string>
+    <string name="eavesstreet_error_view">Network Connection Error!</string>
 
 
 </resources>

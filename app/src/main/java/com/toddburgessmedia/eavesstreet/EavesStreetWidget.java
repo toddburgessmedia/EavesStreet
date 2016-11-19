@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 
@@ -98,8 +97,6 @@ public class EavesStreetWidget extends AppWidgetProvider {
         ComponentName name = new ComponentName(context, EavesStreetWidget.class);
         int[] appIds = manager.getAppWidgetIds(name);
 
-        Log.d(EavesSteetMain.TAG, "onReceive: we got a message");
-        Log.d(EavesSteetMain.TAG, "onReceive: " + intent.getAction());
         if (intent.getAction().equals(ACTION)) {
             for (int appWidgetId : appIds) {
                 updateAppWidget(context, manager, appWidgetId,intent);

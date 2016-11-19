@@ -11,7 +11,6 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
@@ -106,7 +105,6 @@ public class EavesSteetMain extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (requestCode == GET_AUTH_CODE) {
-            Log.d(TAG, "onActivityResult: " + data.getStringExtra("access_token"));
             if (resultCode == RESULT_OK) {
                 editor.putString("access_token", data.getStringExtra("access_token"));
                 editor.putLong("time", (System.currentTimeMillis() / 1000) + 5184000);

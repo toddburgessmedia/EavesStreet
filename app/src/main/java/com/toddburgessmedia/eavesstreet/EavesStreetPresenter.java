@@ -1,15 +1,11 @@
 package com.toddburgessmedia.eavesstreet;
 
-import android.util.Log;
-
 import com.toddburgessmedia.eavesstreet.retrofit.EAProfile;
 import com.toddburgessmedia.eavesstreet.retrofit.EAProfileAPI;
 import com.toddburgessmedia.eavesstreet.retrofit.EAProfileData;
 
 import java.util.StringTokenizer;
 
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
@@ -92,9 +88,8 @@ public class EavesStreetPresenter {
 
             @Override
             public void onError(Throwable e) {
-                Log.d(EavesSteetMain.TAG, "onError: something horrible happened " + e.getMessage());
                 if (view != null) {
-                    view.onError("Network Connection Error!");
+                    view.onError(service.getString(R.string.eavesstreet_error_view));
                 } else {
                     service.onError("network");
                 }
@@ -110,9 +105,7 @@ public class EavesStreetPresenter {
                     profile = data.getProfile();
 
                 } else {
-                    Log.d(EavesSteetMain.TAG, "onNext: " + eaProfileDataResponse.raw().toString());
                     errorMsg = getErrorMessage(eaProfileDataResponse.raw().toString());
-                    Log.d(EavesSteetMain.TAG, "onNext: " + errorMsg);
                     onError(new Throwable(errorMsg));
                 }
             }
@@ -121,15 +114,14 @@ public class EavesStreetPresenter {
 
     private void createRetrofit() {
 
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
+//        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+//        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+//        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
 
         retrofit = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io()))
                 .baseUrl("https://api.empire.kred")
-                .client(client)
                 .build();
     }
 
@@ -141,7 +133,6 @@ public class EavesStreetPresenter {
 
         while (st.hasMoreElements()) {
             token = st.nextToken();
-            Log.d(EavesSteetMain.TAG, "getErrorCode: " + token);
             if (token.startsWith(" message=")) {
                 error = token.substring(token.indexOf('=')+1);
                 break;
