@@ -28,4 +28,5 @@
     <string name="eavesstreet_error_view">Network Connection Error!</string>
 
 
+    <string name="io.branch.apiKey" translatable="false">key_live_oirfJCmoSSfV80rVaRDFZfoftqb2i880</string>
 </resources>

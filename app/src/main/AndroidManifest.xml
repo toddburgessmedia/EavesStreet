@@ -41,6 +41,9 @@
         <service
             android:name=".EavesStreetIntentService"
             android:exported="false"></service>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="f2806195c97691e7d8f8651fd12b6f329312db01" />
     </application>
 
 </manifest>

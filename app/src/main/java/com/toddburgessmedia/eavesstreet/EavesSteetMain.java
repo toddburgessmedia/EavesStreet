@@ -13,8 +13,12 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+
+import io.fabric.sdk.android.Fabric;
 
 public class EavesSteetMain extends AppCompatActivity {
 
@@ -51,10 +55,20 @@ public class EavesSteetMain extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_eaves_steet_main);
 
         prefs = getSharedPreferences("eavesstreet", MODE_PRIVATE);
         editor = prefs.edit();
+
+        if (savedInstanceState != null) {
+            getPrefValues();
+            fragment = (EavesStreetMainFragment) getSupportFragmentManager().getFragment(savedInstanceState, "fragment");
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.main_framelayout, fragment, "fragment");
+            transaction.commit();
+            return;
+        }
 
         if (!accessTokenValid()) {
             authenticateUser();
@@ -63,6 +77,13 @@ public class EavesSteetMain extends AppCompatActivity {
 
         createFragment();
 
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        getSupportFragmentManager().putFragment(outState,"fragment",fragment);
     }
 
     private void createFragment() {
@@ -88,6 +109,8 @@ public class EavesSteetMain extends AppCompatActivity {
         });
 
     }
+
+
 
     public void authenticateUser() {
         Intent i = new Intent(this, EmpireAvenueAuthActivity.class);

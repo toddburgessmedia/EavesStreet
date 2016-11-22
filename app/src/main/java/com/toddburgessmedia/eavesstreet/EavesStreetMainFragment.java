@@ -70,24 +70,9 @@ public class EavesStreetMainFragment extends Fragment implements EavesStreetPres
     long time;
     String clientID;
 
+
     EavesStreetPresenter presenter;
     EAProfile profile;
-
-//    @Override
-//    public void onStart() {
-//        super.onStart();
-//
-//        if (!EventBus.getDefault().isRegistered(this)) {
-//            EventBus.getDefault().register(this);
-//        }
-//    }
-//
-//    @Override
-//    public void onDestroy() {
-//        super.onDestroy();
-//
-//        EventBus.getDefault().unregister(this);
-//    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -109,7 +94,6 @@ public class EavesStreetMainFragment extends Fragment implements EavesStreetPres
         ButterKnife.bind(this,view);
 
         presenter = new EavesStreetPresenter(clientID,accessToken,this);
-
         presenter.fetchEAProfile();
 
         return view;
